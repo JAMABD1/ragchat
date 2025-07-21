@@ -1,36 +1,109 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# RAGChat: Retrieval-Augmented Generation Chat Platform
 
-## Getting Started
+RAGChat is a modern, AI-powered chat platform that lets you upload documents and interact with them using conversational AI. It leverages Retrieval-Augmented Generation (RAG) and integrates with powerful n8n automations for file and message processing.
 
-First, run the development server:
+---
 
+## 🚀 Getting Started
+
+### 1. **Clone the Repository**
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+# Clone the repo
+https://github.com/your-username/ragchat.git
+cd ragchat
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. **Install Dependencies**
+```bash
+npm install
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 3. **Run the Development Server**
+```bash
+npm run dev
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Open [http://localhost:3000](http://localhost:3000) in your browser to use RAGChat.
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## 📁 Features
+- **Upload Documents:** PDF, DOC, DOCX, TXT, CSV, JSON, MD (max 10MB each)
+- **Chat with AI:** Ask questions about your uploaded documents
+- **Markdown Support:** Answers are rendered with full markdown formatting
+- **n8n Integration:** All uploads and chat messages are processed via n8n webhooks
+- **Modern UI:** Responsive, dark mode, and beautiful design
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 🔗 n8n Webhook Integrations
+RAGChat uses the following n8n webhooks for automation and processing:
 
-## Deploy on Vercel
+### 1. **File Upload Webhook**
+- **Endpoint:**
+  ```
+  https://abdallahjaolaza.app.n8n.cloud/webhook-test/e487bed7-8e6e-4af0-85d5-038b09dce16e
+  ```
+- **Used by:** `/api/upload` route
+- **Purpose:** Receives uploaded files (as base64) and metadata for further processing in n8n
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### 2. **Chat Message Webhook**
+- **Endpoint:**
+  ```
+  https://abdallahjaolaza.app.n8n.cloud/webhook-test/3452a21e-036f-41c9-a6a6-e3399e014bbd
+  ```
+- **Used by:** `/api/message` route
+- **Purpose:** Receives user chat messages and returns markdown-formatted AI responses
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+## 🛠️ n8n Integrations & Workflows
+All n8n workflow files and integration details are available in the [`/n8n`](./n8n) directory of this repository.
+
+- **Browse n8n integrations:** [n8n folder in GitHub](./n8n)
+- **How to use:**
+  - Import the workflows into your n8n instance
+  - Configure credentials and endpoints as needed
+  - See the README or docs in `/n8n` for more details
+
+---
+
+## 📝 Usage Guide
+
+### 1. **Uploading Files**
+- Click the **Upload Files** button in the chat UI
+- Select one or more supported document types (max 10MB each)
+- Files are sent to the n8n webhook for processing
+
+### 2. **Chatting with AI**
+- Type your question in the chat input
+- The message is sent to the n8n webhook, which returns a markdown-formatted answer
+- Answers support lists, tables, code, and more (thanks to markdown rendering)
+
+### 3. **Viewing n8n Workflows**
+- See the [`/n8n`](./n8n) folder for all workflow files and integration examples
+
+---
+
+## 💡 Customization & Extending
+- **Add new n8n workflows** in `/n8n` and update the webhook URLs in `/api/upload` and `/api/message` as needed
+- **Change file type/size limits** in `/api/upload/route.ts`
+- **Customize markdown rendering** in `src/app/ragchat/page.tsx`
+
+---
+
+## 🤝 Contributing
+Pull requests and issues are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) if available.
+
+---
+
+## 📚 Resources
+- [Next.js Documentation](https://nextjs.org/docs)
+- [n8n Documentation](https://docs.n8n.io/)
+- [react-markdown](https://github.com/remarkjs/react-markdown)
+- [remark-gfm](https://github.com/remarkjs/remark-gfm)
+
+---
+
+## 🏷️ License
+MIT (see [LICENSE](./LICENSE))
