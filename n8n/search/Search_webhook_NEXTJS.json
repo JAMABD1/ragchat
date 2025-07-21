@@ -1,0 +1,242 @@
+{
+  "name": "Search webhook NEXTJS",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "dcc39fae-c10b-4a0b-81c4-ca73bac9e913",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -600,
+        -180
+      ],
+      "id": "0e7dd70e-4cf6-421b-8668-3709c2d23fe1",
+      "name": "Webhook",
+      "webhookId": "dcc39fae-c10b-4a0b-81c4-ca73bac9e913"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=user: {{ $json.body.message }}\n\n\nuse the tools search for searching for the current events\n\nuse calculator tools to calculate\n\n\n",
+        "options": {
+          "systemMessage": "=You are a helpful assistant."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        -380,
+        -180
+      ],
+      "id": "2463ae0e-1f67-46cf-a897-ad3029ca6e90",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $workflow.id }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -300,
+        40
+      ],
+      "id": "a40e1c2a-ca9f-4b92-9321-8b9b82afd21f",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.3,
+      "position": [
+        80,
+        -180
+      ],
+      "id": "fd54a682-3b5f-4f1b-8358-a77ef10cdf7b",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.toolCalculator",
+      "typeVersion": 1,
+      "position": [
+        -180,
+        160
+      ],
+      "id": "72606cfb-e573-42a1-9817-49deb418dcba",
+      "name": "Calculator"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://google.serper.dev/search",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-API-KEY",
+              "value": "f1a1d90de1f88b7e6c96678a0a9a1c4cf203fca8"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "q",
+              "value": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('parameters0_Value', ``, 'string') }}"
+            }
+          ]
+        },
+        "options": {
+          "redirect": {
+            "redirect": {}
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.2,
+      "position": [
+        -20,
+        40
+      ],
+      "id": "9f89633b-45f7-45f1-bfcf-dbf8847036f4",
+      "name": "Search"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        -620,
+        60
+      ],
+      "id": "b797407e-2e36-40cf-aa7e-7fb1e9de4211",
+      "name": "Groq Chat Model",
+      "credentials": {
+        "groqApi": {
+          "id": "4Cc299bZO8OI4sbh",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -460,
+        80
+      ],
+      "id": "2af3209b-bbde-4b6c-8b48-407d2ec5a1e5",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "dT5ngrC6voSW3kmW",
+          "name": "OpenAi account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Calculator": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        []
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "4af9a29b-f948-485e-a973-9fc0bdd0f8c5",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "4b2cff7e7e31221c7a9140558776c7bfb410a827813a3976b1bcd0e760b872d4"
+  },
+  "id": "AOc2T4wfQy92KioV",
+  "tags": []
+}
